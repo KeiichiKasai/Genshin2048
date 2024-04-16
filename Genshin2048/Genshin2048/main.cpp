@@ -8,7 +8,7 @@
 #define Width 480
 #define Height 680
 int Data[4][4];//存储格子信息，当Data[i][j]=0时，为空白格
-
+int BestScore, CurrentScore;
 void InitData() {
 	int i, j;
 	for (i = 0; i < 4; i++) {
@@ -16,6 +16,17 @@ void InitData() {
 			Data[i][j] = 0;
 		}
 	}
+}
+int Check() {
+	int i, j;
+	for (i = 0; i < 4; i++) {
+		for (j = 0; j < 4; j++) {
+			if (Data[i][j] == 0)return 0; //有一格为空，游戏未结束
+			if (i > 0 && Data[i - 1][j] == Data[i][j])return 0;//有两个相邻的格子相同，游戏未结束
+			if (j > 0 && Data[i][j - 1] == Data[i][j])return 0;
+		}
+	}
+	return 1;
 }
 void CreateData(){
 	int x, y, choice, data;
@@ -34,15 +45,53 @@ void CreateData(){
 		break;
 	}
 }
-void GameUI() {
+
+void RefreshImage() {
+	char CSstr[10],BSstr[10];
 	cleardevice();
-	setfont(100, 0, "幼圆");
-	setcolor(RGB(217, 250, 244));
+	setfont(100, 0, "Microsoft Yahei UI Bold");
+	setcolor(RGB(217, 250, 244)); //2048 字体
+	outtextxy(230, 20, "2048");
+
+	setfillcolor(RGB(184, 175, 160));//当前得分 和 最高得分 背景 
+
+	solidroundrect(210,10,330,80,15,15);
+	setfont(28, 0, "Microsoft Yahei UI Bold");
+	setbkcolor(RGB(184, 175, 160));// 当前得分 字体背景 
+	settextcolor(RGB(248, 247, 241));//当前得分 字体
+	outtextxy(230, 20, "当前得分");
+	setbkcolor(RGB(184, 175, 160));
+	itoa(CurrentScore, CSstr, 10);
+	outtextxy(265, 52, CSstr);//分数
+
+	solidroundrect(350, 10, 460, 80, 15, 15);
+	outtextxy(380, 20, "最高得分");
+	setbkcolor(RGB(184, 175, 160));//最高得分 字体背景
+	itoa(BestScore, BSstr, 10);
+	outtextxy(395, 52, BSstr);
+
+	setfillcolor(RGB(141, 122, 105));
+	solidroundrect(210, 95, 460, 137, 15, 15);
+	setbkcolor(RGB(141, 122, 105));//背景颜色
+	setfont(33, 0, "Microsoft Yahei UI Bold");
+	outtextxy(248, 100, "返回主页面(esc)");
+
+	setfillcolor(RGB(141, 122, 105));
+	solidroundrect(210, 152, 460, 195, 15, 15);
+	setbkcolor(RGB(141, 122, 105));//背景颜色
+	setfont(33, 0, "Microsoft Yahei UI Bold");
+	outtextxy(268, 160, "重新开始(t)");
+
+	setfillcolor(RGB(187, 173, 160));//里面边框配色
+	solidroundrect(10, 210, 460, 660, 20, 20);
+
+	if(Check())
 }
+
 void Start() {
 	InitData();
 	while (1){
-		GameUI();
+		RefreshImage();
 		BeginBatchDraw();//批量画图，无闪烁
 		setbkcolor(RGB(251, 248, 241));
 		
@@ -68,7 +117,7 @@ void Menu()
 
 void InitGame()
 {
-
+	//开场动画
 	mciSendString("open ./bgm/start.mp3 alias music ", NULL, 0, NULL);//背景音乐
 	mciSendString("play music repeat", NULL, 0, NULL);
 	initgraph(1288.8, 724.95);
