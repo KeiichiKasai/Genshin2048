@@ -13,17 +13,17 @@ int Data[4][4];//存储格子信息，当Data[i][j]=0时，为空白格
 int Temp[4][4];
 int BestScore, CurrentScore;
 IMAGE img0, img2, img4, img8, img16, img32, img64, img128, img256, img512, img1024, img2048;
-void CreateData();
-void InitGame();
-void InitData();
-int Check();
-int Find2048();
-void TakeNote();
-int CompareNote();
-void Up();
-void Down();
-void Left();
-void Right();
+void CreateData(); //√
+void InitGame(); // √
+void InitData(); // √
+int Check();// √
+void Find2048(); // √
+void TakeNote(); // √
+int CompareNote();// √
+void Up();// √
+void Down();// √
+void Left();// √
+void Right();// √
 void Reset();
 void Vectory();
 void Defeat();
@@ -31,6 +31,176 @@ void RefreshImage();
 void Start();
 void Menu();
 
+void moveUP(){
+	int i, j, m = 0, n = 0;
+	for (i = 0; i < 4; i++){
+
+		//移动操作
+		j = 0; n = 0;		 //j为当前判定的所在行
+		while (n < 3 && j < 3){  //n为移动的次数
+			if (!Data[j][i]) {  //若发现空白格
+				for (m = j; m < 3; m++)Data[m][i] = Data[m + 1][i];   //下方数据向上平移1格，覆盖空白格
+				Data[3][i] = 0;	//最后一行置0
+				n++;			//移动的次数+1
+			}
+			else j++; //否则：让当前判定的所在行+1
+		}
+
+		//合并操作
+		for (j = 0; j < 3; j++) {//行
+			if (Data[j][i] == Data[j + 1][i] && Data[j][i]!=0) {//相同(且不是0)则合并
+				Data[j][i] = Data[j][i] * 2;//上面的保存合并后的数字
+				Data[j + 1][i] = 0;			//下面的清零
+				CurrentScore += Data[i][j];
+				if (CurrentScore > BestScore)BestScore = CurrentScore;
+			}
+		}
+
+		//移动操作
+		j = 0; n = 0;
+		while (n < 3 && j < 3){
+			if (Data[j][i] == 0)
+			{
+				for (m = j; m < 3; m++)
+					Data[m][i] = Data[m + 1][i];
+				Data[3][i] = 0;
+				n++;
+			}
+			else j++;
+		}
+	}
+	if (CompareNote() == 0)CreateData();
+}
+
+void moveDOWN()//向下移动操作 
+{
+	int i, j;
+	int m = 0, n = 0;
+	for (i = 0; i < 4; i++)//列
+	{
+		//移动操作
+		j = 3; n = 0;
+		while (n < 3 && j>0)
+		{
+			if (Data[j][i] == 0)
+			{
+				for (m = j; m > 0; m--)Data[m][i] = Data[m - 1][i];
+				Data[0][i] = 0;
+				n++;
+			}
+			else j--;
+		}
+
+		//合并操作
+		for (j = 3; j > 0; j--)//行
+			if (Data[j][i] == Data[j - 1][i] && Data[j][i] != 0)//相同(且不是0)则合并
+			{
+				Data[j][i] = Data[j][i] * 2;//下面的保存合并后的数字
+				Data[j - 1][i] = 0;			//上面的清零
+				CurrentScore += Data[i][j];
+				if (CurrentScore > BestScore)BestScore = CurrentScore;
+			}
+		//移动操作
+		j = 3; n = 0;
+		while (n < 3 && j>0)
+		{
+			if (Data[j][i] == 0)
+			{
+				for (m = j; m > 0; m--)Data[m][i] = Data[m - 1][i];
+				Data[0][i] = 0;
+				n++;
+			}
+			else j--;
+		}
+	}
+	if (CompareNote() == 0)CreateData();
+}
+
+void moveLEFT()//向左移动操作 
+{
+	int i, j;
+	int m = 0, n = 0;
+	for (i = 0; i < 4; i++)
+	{
+		//移动操作
+		j = 0; n = 0;
+		while (n < 3 && j < 3)
+		{
+			if (Data[i][j] == 0)
+			{
+				for (m = j; m < 3; m++)Data[i][m] = Data[i][m + 1];
+				Data[i][3] = 0;
+				n++;
+			}
+			else j++;
+		}
+		//合并操作
+		for (j = 0; j < 3; j++)
+			if (Data[i][j] == Data[i][j + 1] && Data[i][j] != 0)
+			{
+				Data[i][j] = Data[i][j] * 2;
+				Data[i][j + 1] = 0;
+				CurrentScore += Data[i][j];
+				if (CurrentScore > BestScore)BestScore = CurrentScore;
+			}
+		//移动操作
+		j = 0; n = 0;
+		while (n < 3 && j < 3)
+		{
+			if (Data[i][j] == 0)
+			{
+				for (m = j; m < 3; m++)Data[i][m] = Data[i][m + 1];
+				Data[i][3] = 0;
+				n++;
+			}
+			else j++;
+		}
+	}
+	if (CompareNote() == 0)CreateData();
+}
+
+void moveRIGHT()//向右移动操作 
+{
+	int i, j;
+	int m = 0, n = 0;
+	for (i = 0; i < 4; i++)
+	{
+		//移动操作
+		j = 3; n = 0;
+		while (n < 3 && j>0)
+		{
+			if (Data[i][j] == 0)
+			{
+				for (m = j; m > 0; m--)Data[i][m] = Data[i][m - 1];
+				Data[i][0] = 0;
+				n++;
+			}
+			else j--;
+		}
+		//合并操作
+		for (j = 3; j > 0; j--)
+			if (Data[i][j] == Data[i][j - 1] && Data[i][j] != 0)
+			{
+				Data[i][j] = Data[i][j] * 2;
+				Data[i][j - 1] = 0;
+				CurrentScore += Data[i][j];
+				if (CurrentScore > BestScore)BestScore = CurrentScore;
+			}
+		//移动操作
+		j = 3; n = 0;
+		while (n < 3 && j>0)
+		{
+			if (Data[i][j] == 0)
+			{
+				for (m = j; m > 0; m--)Data[i][m] = Data[i][m - 1];
+				Data[i][0] = 0;
+				n++;
+			}
+			else j--;
+		}
+	}
+	if (CompareNote() == 0)CreateData();
+}
 void InitData() {
 	int i, j;
 	for (i = 0; i < 4; i++) {
@@ -50,14 +220,13 @@ int Check() {
 	}
 	return 1;
 }
-int	Find2048() {
+void Find2048() {
 	int i, j;
 	for (i = 0; i < 4; i++) {
 		for (j = 0; j < 4; j++) {
-			if (Data[i][j])return 1;
+			if (Data[i][j] == 2048)Vectory();
 		}
 	}
-	return 0;
 }
 void TakeNote() {
 	int i, j;
@@ -76,140 +245,9 @@ int CompareNote() {
 	}
 	return 1;
 }
-void Up() {
-	int i, j, m, step = 0;
-	
-	for (j = 0; j < 4; j++) {
-		i = 0, step = 0;
-		while (i < 3 && step < 3) {
-			if (!Data[i][j]) {
-				for (m = i; m < 3; m++)Data[m][j] = Data[m + 1][j];
-				Data[3][i] = 0;
-				step++;
-			}
-			else i++;
-		}
-		for (i = 0; i < 3; i++) {
-			if (Data[i][j] == Data[i + 1][j] && Data[i][j] != 0) {
-				Data[i][j] = Data[i][j] * 2;
-				Data[j + 1][i] = 0;
-				CurrentScore += Data[i][j];
-				if (CurrentScore > BestScore)BestScore = CurrentScore;
-			}
-			i = 0, step = 0;
-			while (i < 3 && step < 3) {
-				if (!Data[i][j]) {
-					for (m = i; m < 3; m++)Data[m][i] = Data[m + 1][i];
-					Data[3][i] = 0;
-					step++;
-				}
-				else j++;
-			}
-		}
-	}
-	if (!CompareNote()) CreateData();
-}
-void Down() {
-	int i, j, m, step = 0;
-	
-	for (j = 0; j < 4; j++) {
-		i = 3, step = 0;
-		while (i >0 && step < 3) {
-			if (! Data[i][j]) {
-				for (m = i; m > 0; m--) Data[m][j] = Data[m - 1][j];
-				Data[0][j] = 0;
-				step++;
-			}
-			else i--;
-		}
-		for (i = 3; i > 0; i--) {
-			if (Data[i][j] == Data[i - 1][j] && Data[i][j] != 0) {
-				Data[i][j] = Data[i][j] * 2;
-				Data[i-1][j] = 0;
-				CurrentScore += Data[i][j];
-				if (CurrentScore > BestScore)BestScore = CurrentScore;
-			}
-		}
-		i = 3, step = 0;
-		while (i > 3 && step < 3) {
-			if (!Data[i][j]) {
-				for (m = i; m > 0; m--)Data[m][i] = Data[m - 1][i];
-				Data[0][i] = 0;
-				step++;
-			}
-			else j--;
-		}
-	}
-	if (!CompareNote()) CreateData();
-}
-void Left() {
-	int i, j, m, step = 0;
-	
-	for (i = 0; i < 4; i++) {
-		j = 0, step = 0;
-		while (j < 3 && step < 3) {
-			if (!Data[i][j]) {
-				for (m = j; m < 3; m++)Data[i][m] = Data[i][m + 1];
-				Data[i][3] = 0;
-				step++;
-			}
-			else j++;
-		}	
-		for (j = 0; j < 3; j++) {
-			if (Data[i][j] == Data[i][j + 1] && Data[i][j] != 0) {
-				Data[i][j] = Data[i][j] * 2;
-				Data[i][j + 1] = 0;
-				CurrentScore += Data[i][j];
-				if (CurrentScore > BestScore)BestScore = CurrentScore;
-			}
-		}
-		j = 0, step = 0;
-		while (j < 3 && step < 3) {
-			if (!Data[i][j]) {
-				for (m = j; m < 3; m++)Data[i][m] = Data[i][m + 1];
-				Data[i][3] = 0;
-				step++;
-			}
-			else j++;
-		}
-	}
-	if (!CompareNote()) CreateData();
-}
-void Right() {
-	int i, j, m, step = 0;
-	
-	for (i = 0; i < 4; i++) {
-		j = 3, step = 0;
-		while (j > 0 && step < 3) {
-			if (!Data[i][j]) {
-				for (m = j; m >0 ; m--)Data[i][m] = Data[i][m - 1];
-				Data[i][0] = 0;
-				step++;
-			}
-			else j--;
-		}
-		for (j = 3; j >0; j--) {
-			if (Data[i][j] == Data[i][j - 1] && Data[i][j] != 0) {
-				Data[i][j] = Data[i][j] * 2;
-				Data[i][j - 1] = 0;
-				CurrentScore += Data[i][j];
-				if (CurrentScore > BestScore)BestScore = CurrentScore;
-			}
-		}
-		j = 0, step = 0;
-		while (j > 0 && step < 3) {
-			if (!Data[i][j]) {
-				for (m = j; m < 3; m++)Data[i][m] = Data[i][m + 1];
-				Data[i][3] = 0;
-				step++;
-			}
-			else j--;
-		}
-	}
-	if (!CompareNote()) CreateData();
-}
-void Reset() {
 
+void Reset() {
+	cleardevice();
 }
 void Vectory() {
 	cleardevice();
@@ -239,14 +277,14 @@ void CreateData(){
 	}
 }
 void Update() {
-	int kb,i,j,num;
+	int kb;
 	EndBatchDraw();
 	kb = _getch();
 	TakeNote();
-	if (kb == 72)Up();
-	else if (kb == 80)Down();
-	else if (kb == 75)Left();
-	else if (kb == 77)Right();
+	if (kb == 75)moveUP();
+	else if (kb == 77)moveDOWN();
+	else if (kb == 72)moveLEFT();
+	else if (kb == 80)moveRIGHT();
 	else if (kb == 27)Reset();
 	
 }
@@ -321,7 +359,7 @@ void Start() {
 		BeginBatchDraw();//批量画图，无闪烁
 		setbkcolor(RGB(251, 248, 241));
 		Update();
-		if(Find2048())Vectory();
+		Find2048();
 	}
 }
 void Menu()
