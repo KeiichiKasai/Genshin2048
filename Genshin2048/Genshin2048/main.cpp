@@ -11,7 +11,7 @@
 #define Height 680
 int Data[4][4];//存储格子信息，当Data[i][j]=0时，为空白格
 int Temp[4][4];
-int BestScore, CurrentScore;
+int BestScore, CurrentScore,Score;
 IMAGE img0, img2, img4, img8, img16, img32, img64, img128, img256, img512, img1024, img2048;
 void CreateData(); //√
 void InitGame(); // √
@@ -20,10 +20,10 @@ int Check();// √
 void Find2048(); // √
 void TakeNote(); // √
 int CompareNote();// √
-void Up();// √
-void Down();// √
-void Left();// √
-void Right();// √
+void moveUP();// √
+void moveDOWN();// √
+void moveLEFT();// √
+void moveRIGHT();// √
 void Reset();
 void Vectory();
 void Defeat();
@@ -47,11 +47,11 @@ void moveUP(){
 		}
 
 		//合并操作
-		for (j = 0; j < 3; j++) {//行
+		for (j = 0; j < 3; j++) {
 			if (Data[j][i] == Data[j + 1][i] && Data[j][i]!=0) {//相同(且不是0)则合并
 				Data[j][i] = Data[j][i] * 2;//上面的保存合并后的数字
 				Data[j + 1][i] = 0;			//下面的清零
-				CurrentScore += Data[i][j];
+				CurrentScore += Data[j][i];
 				if (CurrentScore > BestScore)BestScore = CurrentScore;
 			}
 		}
@@ -59,8 +59,7 @@ void moveUP(){
 		//移动操作
 		j = 0; n = 0;
 		while (n < 3 && j < 3){
-			if (Data[j][i] == 0)
-			{
+			if (Data[j][i] == 0){
 				for (m = j; m < 3; m++)
 					Data[m][i] = Data[m + 1][i];
 				Data[3][i] = 0;
@@ -69,21 +68,17 @@ void moveUP(){
 			else j++;
 		}
 	}
-	if (CompareNote() == 0)CreateData();
+	if (!CompareNote())CreateData();
 }
 
-void moveDOWN()//向下移动操作 
-{
+void moveDOWN(){
 	int i, j;
 	int m = 0, n = 0;
-	for (i = 0; i < 4; i++)//列
-	{
+	for (i = 0; i < 4; i++){
 		//移动操作
 		j = 3; n = 0;
-		while (n < 3 && j>0)
-		{
-			if (Data[j][i] == 0)
-			{
+		while (n < 3 && j>0){
+			if (!Data[j][i]){
 				for (m = j; m > 0; m--)Data[m][i] = Data[m - 1][i];
 				Data[0][i] = 0;
 				n++;
@@ -92,20 +87,18 @@ void moveDOWN()//向下移动操作
 		}
 
 		//合并操作
-		for (j = 3; j > 0; j--)//行
-			if (Data[j][i] == Data[j - 1][i] && Data[j][i] != 0)//相同(且不是0)则合并
-			{
+		for (j = 3; j > 0; j--) {//行
+			if (Data[j][i] == Data[j - 1][i] && Data[j][i] != 0){
 				Data[j][i] = Data[j][i] * 2;//下面的保存合并后的数字
 				Data[j - 1][i] = 0;			//上面的清零
-				CurrentScore += Data[i][j];
+				CurrentScore += Data[j][i];
 				if (CurrentScore > BestScore)BestScore = CurrentScore;
 			}
+		}
 		//移动操作
 		j = 3; n = 0;
-		while (n < 3 && j>0)
-		{
-			if (Data[j][i] == 0)
-			{
+		while (n < 3 && j>0){
+			if (!Data[j][i]){
 				for (m = j; m > 0; m--)Data[m][i] = Data[m - 1][i];
 				Data[0][i] = 0;
 				n++;
@@ -113,21 +106,17 @@ void moveDOWN()//向下移动操作
 			else j--;
 		}
 	}
-	if (CompareNote() == 0)CreateData();
+	if (!CompareNote())CreateData();
 }
 
-void moveLEFT()//向左移动操作 
-{
+void moveLEFT(){
 	int i, j;
 	int m = 0, n = 0;
-	for (i = 0; i < 4; i++)
-	{
+	for (i = 0; i < 4; i++){
 		//移动操作
 		j = 0; n = 0;
-		while (n < 3 && j < 3)
-		{
-			if (Data[i][j] == 0)
-			{
+		while (n < 3 && j < 3){
+			if (!Data[i][j]){
 				for (m = j; m < 3; m++)Data[i][m] = Data[i][m + 1];
 				Data[i][3] = 0;
 				n++;
@@ -135,20 +124,18 @@ void moveLEFT()//向左移动操作
 			else j++;
 		}
 		//合并操作
-		for (j = 0; j < 3; j++)
-			if (Data[i][j] == Data[i][j + 1] && Data[i][j] != 0)
-			{
+		for (j = 0; j < 3; j++) {
+			if (Data[i][j] == Data[i][j + 1] && Data[i][j] != 0) {
 				Data[i][j] = Data[i][j] * 2;
 				Data[i][j + 1] = 0;
 				CurrentScore += Data[i][j];
 				if (CurrentScore > BestScore)BestScore = CurrentScore;
 			}
+		}
 		//移动操作
 		j = 0; n = 0;
-		while (n < 3 && j < 3)
-		{
-			if (Data[i][j] == 0)
-			{
+		while (n < 3 && j < 3){
+			if (!Data[i][j]){
 				for (m = j; m < 3; m++)Data[i][m] = Data[i][m + 1];
 				Data[i][3] = 0;
 				n++;
@@ -156,21 +143,17 @@ void moveLEFT()//向左移动操作
 			else j++;
 		}
 	}
-	if (CompareNote() == 0)CreateData();
+	if (!CompareNote())CreateData();
 }
 
-void moveRIGHT()//向右移动操作 
-{
+void moveRIGHT(){
 	int i, j;
 	int m = 0, n = 0;
-	for (i = 0; i < 4; i++)
-	{
+	for (i = 0; i < 4; i++){
 		//移动操作
 		j = 3; n = 0;
-		while (n < 3 && j>0)
-		{
-			if (Data[i][j] == 0)
-			{
+		while (n < 3 && j>0){
+			if (!Data[i][j]){
 				for (m = j; m > 0; m--)Data[i][m] = Data[i][m - 1];
 				Data[i][0] = 0;
 				n++;
@@ -178,20 +161,18 @@ void moveRIGHT()//向右移动操作
 			else j--;
 		}
 		//合并操作
-		for (j = 3; j > 0; j--)
-			if (Data[i][j] == Data[i][j - 1] && Data[i][j] != 0)
-			{
+		for (j = 3; j > 0; j--) {
+			if (Data[i][j] == Data[i][j - 1] && Data[i][j] != 0) {
 				Data[i][j] = Data[i][j] * 2;
 				Data[i][j - 1] = 0;
 				CurrentScore += Data[i][j];
 				if (CurrentScore > BestScore)BestScore = CurrentScore;
 			}
+		}
 		//移动操作
 		j = 3; n = 0;
-		while (n < 3 && j>0)
-		{
-			if (Data[i][j] == 0)
-			{
+		while (n < 3 && j>0){
+			if (!Data[i][j]){
 				for (m = j; m > 0; m--)Data[i][m] = Data[i][m - 1];
 				Data[i][0] = 0;
 				n++;
@@ -199,8 +180,9 @@ void moveRIGHT()//向右移动操作
 			else j--;
 		}
 	}
-	if (CompareNote() == 0)CreateData();
+	if (!CompareNote())CreateData();
 }
+
 void InitData() {
 	int i, j;
 	for (i = 0; i < 4; i++) {
@@ -209,6 +191,7 @@ void InitData() {
 		}
 	}
 }
+
 int Check() {
 	int i, j;
 	for (i = 0; i < 4; i++) {
@@ -248,6 +231,10 @@ int CompareNote() {
 
 void Reset() {
 	cleardevice();
+	CurrentScore = 0;
+	InitData();
+	CreateData();
+	CreateData();
 }
 void Vectory() {
 	cleardevice();
@@ -291,9 +278,10 @@ void Update() {
 void RefreshImage() {
 	int i, j;
 	char CSstr[10],BSstr[10];
+	IMAGE paimeng,a1,a2,a3,a4;
 	cleardevice();
 	setfont(100, 0, "Microsoft Yahei UI Bold");
-	setcolor(RGB(217, 250, 244)); //2048 字体
+	setcolor(RGB(141,122,105)); //2048 字体
 	outtextxy(15, 0, "2048");
 
 	setfillcolor(RGB(184, 175, 160));//当前得分 和 最高得分 背景 
@@ -305,25 +293,33 @@ void RefreshImage() {
 	outtextxy(230, 20, "当前得分");
 	setbkcolor(RGB(184, 175, 160));
 	_itoa(CurrentScore, CSstr, 10);
-	outtextxy(265, 52, CSstr);//分数
+	outtextxy(260, 52, CSstr);//分数
 
 	solidroundrect(350, 10, 460, 80, 15, 15);
-	outtextxy(380, 20, "最高得分");
+	outtextxy(365, 20, "最高得分");
 	setbkcolor(RGB(184, 175, 160));//最高得分 字体背景
 	_itoa(BestScore, BSstr, 10);
-	outtextxy(395, 52, BSstr);
+	outtextxy(390, 52, BSstr);
 
 	setfillcolor(RGB(141, 122, 105));
 	solidroundrect(210, 95, 460, 137, 15, 15);
 	setbkcolor(RGB(141, 122, 105));//背景颜色
 	setfont(33, 0, "Microsoft Yahei UI Bold");
-	outtextxy(248, 100, "返回主页面(esc)");
+	outtextxy(248, 100, "重新开始[Esc]");
 
-	setfillcolor(RGB(141, 122, 105));
-	solidroundrect(210, 152, 460, 195, 15, 15);
-	setbkcolor(RGB(141, 122, 105));//背景颜色
-	setfont(33, 0, "Microsoft Yahei UI Bold");
-	outtextxy(268, 160, "重新开始(t)");
+	BeginBatchDraw();
+
+	loadimage(&paimeng, "./image/paimeng.png",190,100);
+	loadimage(&a1, "./image/a1.png",66,66);
+	loadimage(&a2, "./image/a2.png",66,66);
+	loadimage(&a3, "./image/a3.png",66,66);
+	loadimage(&a4, "./image/a4.png",66,66);	
+	putimage(10, 100, &paimeng);
+	putimage(200, 141, &a1);
+	putimage(266, 141, &a2);
+	putimage(332, 141, &a3);
+	putimage(398, 141, &a4);
+	
 
 	setfillcolor(RGB(187, 173, 160));//里面边框配色
 	solidroundrect(10, 210, 460, 660, 20, 20);
@@ -348,16 +344,18 @@ void RefreshImage() {
 			}
 		}
 	}
+	EndBatchDraw();
 }
 
 void Start() {
+	CurrentScore = 0;
 	InitData();
 	CreateData();
 	CreateData();
 	while (1){
 		RefreshImage();
 		BeginBatchDraw();//批量画图，无闪烁
-		setbkcolor(RGB(251, 248, 241));
+		setbkcolor(RGB(250, 250, 250));
 		Update();
 		Find2048();
 	}
@@ -378,6 +376,7 @@ void Menu()
 	drawtext("开始游戏", &r2, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 	RECT r3 = { Width / 2 - 45, Height / 3 + 75,Width / 2 + 45,Height / 3 + 105 };
 	drawtext("退出游戏", &r3, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+	setbkcolor(RGB(250, 250, 250));
 }
 
 void InitGame()
@@ -398,8 +397,8 @@ void InitGame()
 
 
 	initgraph(Width, Height);//长宽
-	setbkcolor(RGB(96, 143, 183));//背景
-	settextcolor(RGB(251, 248, 241));
+	setbkcolor(RGB(250, 250, 250));//背景
+	settextcolor(RGB(250, 250, 250));
 
 	MOUSEMSG m;
 	while (1){
