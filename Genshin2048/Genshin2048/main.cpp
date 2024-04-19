@@ -31,6 +31,8 @@ void RefreshImage();
 void Start();
 void Menu();
 
+
+
 void moveUP(){
 	int i, j, m = 0, n = 0;
 	for (i = 0; i < 4; i++){
@@ -228,7 +230,6 @@ int CompareNote() {
 	}
 	return 1;
 }
-
 void Reset() {
 	cleardevice();
 	CurrentScore = 0;
@@ -237,14 +238,18 @@ void Reset() {
 	CreateData();
 }
 void Vectory() {
+	IMAGE t;
 	cleardevice();
 	mciSendString("close music", NULL, 0, NULL);
-
+	loadimage(&t, "./image/vectory.png", Width, Height);
+	putimage(0, 0, &t);
 }
 void Defeat() {
+	IMAGE t;
 	cleardevice();
 	mciSendString("close music", NULL, 0, NULL);
-	
+	loadimage(&t, "./image/defeat.png",Width,Height);
+	putimage(0, 0, &t);
 }
 void CreateData(){
 	int x, y, choice, data;
@@ -265,7 +270,7 @@ void CreateData(){
 }
 void Update() {
 	int kb;
-	EndBatchDraw();
+	FlushBatchDraw();
 	kb = _getch();
 	TakeNote();
 	if (kb == 75)moveUP();
@@ -280,6 +285,7 @@ void RefreshImage() {
 	char CSstr[10],BSstr[10];
 	IMAGE paimeng,a1,a2,a3,a4;
 	cleardevice();
+	BeginBatchDraw();
 	setfont(100, 0, "Microsoft Yahei UI Bold");
 	setcolor(RGB(141,122,105)); //2048 字体
 	outtextxy(15, 0, "2048");
@@ -307,7 +313,7 @@ void RefreshImage() {
 	setfont(33, 0, "Microsoft Yahei UI Bold");
 	outtextxy(248, 100, "重新开始[Esc]");
 
-	BeginBatchDraw();
+	
 
 	loadimage(&paimeng, "./image/paimeng.png",190,100);
 	loadimage(&a1, "./image/a1.png",66,66);
@@ -324,27 +330,29 @@ void RefreshImage() {
 	setfillcolor(RGB(187, 173, 160));//里面边框配色
 	solidroundrect(10, 210, 460, 660, 20, 20);
 
-	if (Check())Defeat();
+	
 
 	for (i = 0; i < 4; i++) {
 		for (j = 0; j < 4; j++) {
 			switch (Data[i][j]) {
 			case 0:loadimage(&img0, "./image/blank.png", 100, 100); putimage(i * 110 + 20, j * 110 + 220, &img0); break;
-			case 2:loadimage(&img2, "./image/2.png", 100, 100); putimage(i * 110 + 20, j * 110 + 220, &img2); break;
-			case 4:loadimage(&img4, "./image/4.png", 100, 100); putimage(i * 110 + 20, j * 110 + 220, &img4); break;
-			case 8:loadimage(&img8, "./image/8.png", 100, 100); putimage(i * 110 + 20, j * 110 + 220, &img8); break;
-			case 16:loadimage(&img16, "./image/16.png", 100, 100); putimage(i * 110 + 20, j * 110 + 220, &img16); break;
-			case 32:loadimage(&img32, "./image/32.png", 100, 100); putimage(i * 110 + 20, j * 110 + 220, &img32); break;
-			case 64:loadimage(&img64, "./image/64.png", 100, 100); putimage(i * 110 + 20, j * 110 + 220, &img64); break;
-			case 128:loadimage(&img128, "./image/128.png", 100, 100); putimage(i * 110 + 20, j * 110 + 220, &img128); break;
-			case 256:loadimage(&img256, "./image/256.png", 100, 100); putimage(i * 110 + 20, j * 110 + 220, &img256); break;
-			case 512:loadimage(&img512, "./image/512.png", 100, 100); putimage(i * 110 + 20, j * 110 + 220, &img512); break;
-			case 1024:loadimage(&img1024, "./image/1024.png", 100, 100); putimage(i * 110 + 20, j * 110 + 220, &img1024); break;
-			case 2048:loadimage(&img2048, "./image/2048.png", 100, 100); putimage(i * 110 + 20, j * 110 + 220, &img2048); break;
+			case 2:loadimage(&img2, "./image/x2.png", 100, 100); putimage(i * 110 + 20, j * 110 + 220, &img2); break;
+			case 4:loadimage(&img4, "./image/x4.png", 100, 100); putimage(i * 110 + 20, j * 110 + 220, &img4); break;
+			case 8:loadimage(&img8, "./image/x8.png", 100, 100); putimage(i * 110 + 20, j * 110 + 220, &img8); break;
+			case 16:loadimage(&img16, "./image/x16.png", 100, 100); putimage(i * 110 + 20, j * 110 + 220, &img16); break;
+			case 32:loadimage(&img32, "./image/x32.png", 100, 100); putimage(i * 110 + 20, j * 110 + 220, &img32); break;
+			case 64:loadimage(&img64, "./image/x64.png", 100, 100); putimage(i * 110 + 20, j * 110 + 220, &img64); break;
+			case 128:loadimage(&img128, "./image/x128.png", 100, 100); putimage(i * 110 + 20, j * 110 + 220, &img128); break;
+			case 256:loadimage(&img256, "./image/x256.png", 100, 100); putimage(i * 110 + 20, j * 110 + 220, &img256); break;
+			case 512:loadimage(&img512, "./image/x512.png", 100, 100); putimage(i * 110 + 20, j * 110 + 220, &img512); break;
+			case 1024:loadimage(&img1024, "./image/x1024.png", 100, 100); putimage(i * 110 + 20, j * 110 + 220, &img1024); break;
+			case 2048:loadimage(&img2048, "./image/x2048.png", 100, 100); putimage(i * 110 + 20, j * 110 + 220, &img2048); break;
 			}
 		}
 	}
-	EndBatchDraw();
+	FlushBatchDraw();
+	if (Check())Defeat();
+	
 }
 
 void Start() {
@@ -381,7 +389,7 @@ void Menu()
 
 void InitGame()
 {
-	//开场动画
+	
 	//mciSendString("open ./bgm/start.mp3 alias music ", NULL, 0, NULL);//背景音乐
 	//mciSendString("play music repeat", NULL, 0, NULL);
 	//initgraph(1288, 724);
@@ -402,9 +410,10 @@ void InitGame()
 
 	MOUSEMSG m;
 	while (1){
-		Menu();
-		EndBatchDraw();//结束批量绘图   没这个会闪屏
 		BeginBatchDraw();//批量绘图
+		Menu();
+		FlushBatchDraw();//结束批量绘图   没这个会闪屏
+		
 		m = GetMouseMsg();//获取鼠标信息
 		if (m.mkLButton == 1){
 			if (m.x > Width / 2 - 45 && m.x<Width / 2 + 45 && m.y>Height / 3 + 15 && m.y < Height / 3 + 45)
