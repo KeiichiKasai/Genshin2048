@@ -13,17 +13,17 @@ int Data[4][4];//存储格子信息，当Data[i][j]=0时，为空白格
 int Temp[4][4];
 int BestScore, CurrentScore,Score;
 IMAGE img0, img2, img4, img8, img16, img32, img64, img128, img256, img512, img1024, img2048;
-void CreateData(); //√
-void InitGame(); // √
-void InitData(); // √
-int Check();// √
-void Find2048(); // √
-void TakeNote(); // √
-int CompareNote();// √
-void moveUP();// √
-void moveDOWN();// √
-void moveLEFT();// √
-void moveRIGHT();// √
+void CreateData();
+void InitGame(); 
+void InitData(); 
+int Check();
+void Find2048(); 
+void TakeNote(); 
+int CompareNote();
+void moveUP();
+void moveDOWN();
+void moveLEFT();
+void moveRIGHT();
 void Reset();
 void Vectory();
 void Defeat();
@@ -231,11 +231,15 @@ int CompareNote() {
 	return 1;
 }
 void Reset() {
+	mciSendString("close music", NULL, 0, NULL);
+
 	cleardevice();
 	CurrentScore = 0;
 	InitData();
 	CreateData();
 	CreateData();
+	mciSendString("open ./bgm/start.mp3 alias music", NULL, 0, NULL);
+	mciSendString("play music repeat", NULL, 0, NULL);
 }
 void Vectory() {
 	IMAGE t;
@@ -243,6 +247,10 @@ void Vectory() {
 	mciSendString("close music", NULL, 0, NULL);
 	loadimage(&t, "./image/vectory.png", Width, Height);
 	putimage(0, 0, &t);
+	setbkmode(TRANSPARENT);
+	settextcolor(RGB(255, 255, 255));
+	settextstyle(45, 15, "Microsoft Yahei UI Bold");
+	outtextxy(280, 635, "按ESC重新开始");
 }
 void Defeat() {
 	IMAGE t;
@@ -250,6 +258,10 @@ void Defeat() {
 	mciSendString("close music", NULL, 0, NULL);
 	loadimage(&t, "./image/defeat.png",Width,Height);
 	putimage(0, 0, &t);
+	setbkmode(TRANSPARENT);
+	settextcolor(RGB(255, 255, 255));
+	settextstyle(45, 15, "Microsoft Yahei UI Bold");
+	outtextxy(280, 635, "按ESC重新开始");
 }
 void CreateData(){
 	int x, y, choice, data;
@@ -376,7 +388,8 @@ void Menu()
 	putimage(0, 0, &bk);
 	setfont(80, 50, "幼圆");//字体设置
 	RECT r1 = { 0,0,Width,Height / 3 };
-	setbkcolor(RGB(96, 142, 182));
+	
+	setbkmode(TRANSPARENT); //字体透明化
 	drawtext("2048", &r1, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 	setbkcolor(RGB(109, 156, 196));
 	setfont(30, 12, "幼圆");
@@ -390,17 +403,17 @@ void Menu()
 void InitGame()
 {
 	
-	//mciSendString("open ./bgm/start.mp3 alias music ", NULL, 0, NULL);//背景音乐
-	//mciSendString("play music repeat", NULL, 0, NULL);
-	//initgraph(1288, 724);
-	//IMAGE s, e;
-	//loadimage(&s, "image/genshi.png", 1288, 724);
-	//loadimage(&e, "image/genshin1.png", 1288, 724);
-	//putimage(0, 0, &s);
-	//Sleep(2500);
-	//putimage(0, 0, &e);
-	//_getch();
-	//closegraph();
+	mciSendString("open ./bgm/start.mp3 alias music ", NULL, 0, NULL);//背景音乐
+	mciSendString("play music repeat", NULL, 0, NULL);
+	initgraph(1288, 724);
+	IMAGE s, e;
+	loadimage(&s, "image/genshi.png", 1288, 724);
+	loadimage(&e, "image/genshin1.png", 1288, 724);
+	putimage(0, 0, &s);
+	Sleep(2500);
+	putimage(0, 0, &e);
+	_getch();
+	closegraph();
 
 
 
